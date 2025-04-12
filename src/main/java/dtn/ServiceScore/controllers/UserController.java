@@ -1,5 +1,6 @@
 package dtn.ServiceScore.controllers;
 
+import dtn.ServiceScore.components.ExcelHelper;
 import dtn.ServiceScore.dtos.ChangePasswordDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.dtos.UserLoginDTO;
@@ -16,7 +17,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
+    private final ExcelHelper excelHelper;
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
         try {
@@ -104,4 +108,28 @@ public class UserController {
         userService.changePassword(request);
         return ResponseEntity.ok("Đổi mật khẩu thành công!");
     }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<?> registerMultipleUsers(@RequestParam("file") MultipartFile file) {
+        try {
+            List<UserDTO> userList = excelHelper.excelToUsers(file);
+
+            List<String> result = new ArrayList<>();
+            for (UserDTO userDTO : userList) {
+                try {
+                    userService.createUser(userDTO);
+                    result.add("Thành công: " + userDTO.getUsername());
+                } catch (Exception e) {
+                    result.add("Lỗi với " + userDTO.getUsername() + ": " + e.getMessage());
+                }
+            }
+
+            return ResponseEntity.ok(result);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Không thể đọc file Excel: " + e.getMessage());
+        }
+    }
+
+
 }

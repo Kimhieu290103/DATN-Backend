@@ -1,5 +1,6 @@
 package dtn.ServiceScore.services;
 
+import dtn.ServiceScore.dtos.ClassDTO;
 import dtn.ServiceScore.dtos.ClassSearchRequest;
 import dtn.ServiceScore.model.Class;
 
@@ -9,5 +10,7 @@ public interface ClassService {
     List<Class> getAllClass();
 
     List<Class> getClasses(ClassSearchRequest request);
+
+    void createClass(ClassDTO classDTO);
 
 }

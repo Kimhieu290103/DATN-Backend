@@ -36,6 +36,9 @@ public interface RegistrationService {
     // danh sách các sự kiện sinh viên đã điểm danh
     List<EventRespone> getAttendedEvents(Long userId, Long semesterId);
 
+
+    // lấy danh sách sự kiện sinh viên đã đăng kí
+    List<EventRespone> getRegisterEvents(Long userId, Long semesterId);
 //    // danh sách các sự kiện sinh viên đã điểm danh phân theo kì
 //    List<EventRespone> getAttendedEventsBySemester(Long userId, String semesterName);
 

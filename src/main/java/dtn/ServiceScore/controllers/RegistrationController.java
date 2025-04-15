@@ -78,6 +78,16 @@ public class RegistrationController {
         return ResponseEntity.ok(events);
     }
 
+
+    // danb sách các hoạt dộng sinh viên đã tham gia(có điêmr danh)
+    @GetMapping("/register/{userId}")
+    public ResponseEntity<?> getRegisterEvents(
+            @PathVariable Long userId,
+            @RequestParam(required = false) Long semesterId) {  // Thêm tham số semesterId tùy chọn
+        List<EventRespone> events = registrationService.getRegisterEvents(userId, semesterId);
+        return ResponseEntity.ok(events);
+    }
+
     // xuất danh sách sinh viên đăng kí sự kiện exel
     @GetMapping("/export/{eventId}")
     public ResponseEntity<Resource> exportEventRegistrations(@PathVariable Long eventId) {

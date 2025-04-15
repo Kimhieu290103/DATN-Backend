@@ -1,5 +1,6 @@
 package dtn.ServiceScore.components;
 
+import dtn.ServiceScore.dtos.ClassDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
@@ -45,5 +46,28 @@ public class ExcelHelper {
         }
 
         return users;
+    }
+
+    public List<ClassDTO> excelToClasses(MultipartFile file) throws IOException {
+        List<ClassDTO> classes = new ArrayList<>();
+
+        try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) { // Bỏ qua header
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                ClassDTO classDTO = new ClassDTO();
+                classDTO.setName(row.getCell(0).getStringCellValue());
+                classDTO.setDepartmentId((long) row.getCell(1).getNumericCellValue());
+                classDTO.setCourse(row.getCell(2).getStringCellValue());
+                classDTO.setStatus(row.getCell(3).getBooleanCellValue());
+
+                classes.add(classDTO);
+            }
+        }
+
+        return classes;
     }
 }

@@ -86,6 +86,10 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .findByUser_IdAndEvent_Id(userId, eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy đăng ký của người dùng cho sự kiện này"));
         registrationRepository.delete(registration);
+        Event existingEvent = eventRepository.findById(eventId)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy event"));
+        existingEvent.setCurrentRegistrations(existingEvent.getCurrentRegistrations()-1);
+        eventRepository.save(existingEvent);
     }
 
 
@@ -209,6 +213,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     public List<EventRespone> getAttendedEvents(Long userId, Long semesterId) {
         //System.out.println("Received semesterId: " + semesterId);
         List<Registration> registrations = registrationRepository.findByUserIdAndAttendancesTrue(userId);
+
+        return registrations.stream()
+                .filter(registration -> semesterId == null || registration.getEvent().getSemester().getId().equals(semesterId)) // Lọc theo kỳ học
+                .map(registration -> mapToDTO(registration.getEvent()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EventRespone> getRegisterEvents(Long userId, Long semesterId) {
+        List<Registration> registrations = registrationRepository.findByUserIdAndAttendancesFalse(userId);
 
         return registrations.stream()
                 .filter(registration -> semesterId == null || registration.getEvent().getSemester().getId().equals(semesterId)) // Lọc theo kỳ học

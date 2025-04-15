@@ -77,6 +77,8 @@ public class UserController {
                 .dateOfBirth(user.getDateOfBirth())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .clazz(user.getClazz().getName())
+                .Department(user.getClazz().getDepartment().getName())
                 .build();
         return userResponse;
 

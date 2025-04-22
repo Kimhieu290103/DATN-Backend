@@ -16,6 +16,9 @@ public interface StudentCriteriaRepository extends JpaRepository<StudentCriteria
 
     @Query("SELECT sc.student FROM StudentCriteria sc " +
             "WHERE sc.semester.id = :semesterId " +
+            "AND sc.student.role.name = 'SV' " +
+            "AND EXISTS (SELECT 1 FROM DisciplinaryPoint dp " +
+            "            WHERE dp.user = sc.student AND dp.semester.id = :semesterId AND dp.points > 80) " +
             "GROUP BY sc.student " +
             "HAVING COUNT(DISTINCT sc.criteria.id) = " +
             "      (SELECT COUNT(fc.id) FROM FiveGoodCriteria fc WHERE fc.semester.id = :semesterId)")

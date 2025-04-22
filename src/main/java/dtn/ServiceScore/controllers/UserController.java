@@ -11,6 +11,9 @@ import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -132,6 +135,78 @@ public class UserController {
                     .body("Không thể đọc file Excel: " + e.getMessage());
         }
     }
+
+    @GetMapping("/students")
+    public ResponseEntity<?> getStudents(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int limit) {
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<User> studentPage = userService.getUsersByRole("SV", pageable);
+
+        Page<UserResponse> responsePage = studentPage.map(user -> UserResponse.builder()
+                .id(user.getId())
+                .fullname(user.getFullname())
+                .phoneNumber(user.getPhoneNumber())
+                .studentId(user.getStudentId())
+                .address(user.getAddress())
+                .isActive(user.isActive())
+                .dateOfBirth(user.getDateOfBirth())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .clazz(user.getClazz() != null ? user.getClazz().getName() : null)
+                .Department(user.getClazz() != null && user.getClazz().getDepartment() != null
+                        ? user.getClazz().getDepartment().getName() : null)
+                .build());
+
+        return ResponseEntity.ok(responsePage);
+    }
+    @GetMapping("/lcdlist")
+    public ResponseEntity<?> getLcds(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int limit) {
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<User> studentPage = userService.getUsersByRole("LCD", pageable);
+
+        Page<UserResponse> responsePage = studentPage.map(user -> UserResponse.builder()
+                .id(user.getId())
+                .fullname(user.getFullname())
+                .phoneNumber(user.getPhoneNumber())
+                .studentId(user.getStudentId())
+                .address(user.getAddress())
+                .isActive(user.isActive())
+                .dateOfBirth(user.getDateOfBirth())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .clazz(user.getClazz() != null ? user.getClazz().getName() : null)
+                .Department(user.getClazz() != null && user.getClazz().getDepartment() != null
+                        ? user.getClazz().getDepartment().getName() : null)
+                .build());
+
+        return ResponseEntity.ok(responsePage);
+    }
+    @GetMapping("/exclude-sv-lcd")
+    public ResponseEntity<?> getUsersExcludeSVAndLCD() {
+        List<User> users = userService.getUsersExcludingRoles();
+
+        List<UserResponse> userResponses = users.stream()
+                .map(user -> UserResponse.builder()
+                        .id(user.getId())
+                        .fullname(user.getFullname())
+                        .phoneNumber(user.getPhoneNumber())
+                        .studentId(user.getStudentId())
+                        .address(user.getAddress())
+                        .isActive(user.isActive())
+                        .dateOfBirth(user.getDateOfBirth())
+                        .email(user.getEmail())
+                        .username(user.getUsername())
+                        .role(user.getRole().getName())
+                        .clazz(user.getClazz() != null ? user.getClazz().getName() : null)
+                        .Department(user.getClazz() != null && user.getClazz().getDepartment() != null
+                                ? user.getClazz().getDepartment().getName() : null)
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userResponses);
+    }
+
 
 
 }

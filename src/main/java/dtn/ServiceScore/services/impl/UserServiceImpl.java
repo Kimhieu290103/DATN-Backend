@@ -15,6 +15,9 @@ import dtn.ServiceScore.responses.UserResponse;
 import dtn.ServiceScore.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -132,5 +136,16 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
     }
+
+    public Page<User> getUsersByRole(String roleName, Pageable pageable) {
+        return userRepository.findAllByRole_Name(roleName, pageable);
+    }
+
+    @Override
+    public List<User> getUsersExcludingRoles() {
+        List<String> excludedRoles = Arrays.asList("SV", "LCD");
+        return userRepository.findAllByRole_NameNotIn(excludedRoles);
+    }
+
 
 }

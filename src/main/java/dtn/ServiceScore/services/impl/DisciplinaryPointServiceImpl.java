@@ -208,7 +208,8 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
 
             // Trả về kết quả
             return StudentPointResponse.builder()
-                    .studentId(student.getId())
+                    .id(student.getId())
+                    .studentId(student.getStudentId())
                     .studentName(student.getFullname())
                     .className(student.getClazz().getName())
                     .email(student.getEmail())

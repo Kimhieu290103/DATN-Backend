@@ -2,6 +2,8 @@ package dtn.ServiceScore.repositories;
 
 import dtn.ServiceScore.model.Class;
 import dtn.ServiceScore.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,5 +27,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByFilters(@Param("classId") Long classId,
                              @Param("courseId") Integer courseId,
                              @Param("departmentId") Integer departmentId);
+
+    Page<User> findAllByRole_Name(String roleName, Pageable pageable);
+
+
+    List<User> findAllByRole_NameNotIn(List<String> roleNames);
+
+
+
 
 }

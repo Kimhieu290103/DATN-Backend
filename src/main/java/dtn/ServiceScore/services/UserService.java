@@ -4,6 +4,8 @@ import dtn.ServiceScore.dtos.ChangePasswordDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.LoginRespone;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,4 +21,8 @@ public interface UserService {
     User getUserById(Long userId);
 
     void changePassword(ChangePasswordDTO request);
+
+    Page<User> getUsersByRole(String roleName,  Pageable pageable);
+
+    public List<User> getUsersExcludingRoles();
 }

@@ -43,4 +43,6 @@ public class UserResponse {
 
     private boolean attendances;
 
+    private String role;
+
 }

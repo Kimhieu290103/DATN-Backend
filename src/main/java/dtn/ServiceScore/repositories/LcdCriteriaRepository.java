@@ -15,6 +15,7 @@ import java.util.List;
 public interface LcdCriteriaRepository extends JpaRepository<LcdCriteria, Long> {
     @Query("SELECT lc.user FROM LcdCriteria lc " +
             "WHERE lc.semester.id = :semesterId " +
+            "AND lc.user.role.name = 'LCD' " +
             "GROUP BY lc.user " +
             "HAVING COUNT(DISTINCT lc.fiveGoodCriteriaLcd.id) = " +
             "(SELECT COUNT(f) FROM FiveGoodCriteriaLcd f WHERE f.semester.id = :semesterId)")

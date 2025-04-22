@@ -68,6 +68,7 @@ public class ExternalEventServiceIpml implements ExternalEventService {
                 .sorted(Comparator.comparing(event -> event.getUser().getId()))
                 .map(event -> ExternalEventResponse.builder()
                         .id(event.getId())
+                        .studentId(event.getUser().getStudentId())
                         .user_id(event.getUser().getId())
                         .nameStudent(event.getUser().getFullname())
                         .name(event.getName())

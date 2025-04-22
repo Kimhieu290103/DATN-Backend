@@ -11,7 +11,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class StudentPointResponse {
-    private Long studentId;
+    private Long id;
+    private String studentId;
     private String studentName;
     private String className;
     private String email;

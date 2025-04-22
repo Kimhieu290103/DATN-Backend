@@ -9,6 +9,7 @@ import dtn.ServiceScore.repositories.SemesterRepository;
 import dtn.ServiceScore.repositories.StudentCriteriaRepository;
 import dtn.ServiceScore.services.FiveGoodCriteriaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,7 +58,8 @@ public class FiveGoodCriteriaServiceImpl implements FiveGoodCriteriaService {
     // lấy danh sách các tiêu chí theo kì
     @Override
     public List<FiveGoodCriteria> getCriteriaBySemester(Long semesterId) {
-        return fiveGoodCriteriaRepository.findBySemesterId(semesterId);
+        Sort sort = Sort.by(Sort.Order.asc("id"));
+        return fiveGoodCriteriaRepository.findBySemesterId(semesterId , sort);
     }
 
     @Override

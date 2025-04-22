@@ -9,6 +9,7 @@ import dtn.ServiceScore.repositories.LcdCriteriaRepository;
 import dtn.ServiceScore.repositories.SemesterRepository;
 import dtn.ServiceScore.services.FiveGoodCriteriaLcdService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,7 +57,8 @@ public class FiveGoodCriteriaLcdServiceImpl implements FiveGoodCriteriaLcdServic
 
     @Override
     public List<FiveGoodCriteriaLcd> getCriteriaLcdBySemester(Long semesterId) {
-        return fiveGoodCriteriaLcdRepository.findBySemesterId(semesterId);
+        Sort sort = Sort.by(Sort.Order.asc("id"));  // Sắp xếp theo id theo thứ tự tăng dần
+        return fiveGoodCriteriaLcdRepository.findBySemesterId(semesterId, sort);
     }
 
     @Override

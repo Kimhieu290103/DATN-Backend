@@ -114,27 +114,7 @@ public class UserController {
         return ResponseEntity.ok("Đổi mật khẩu thành công!");
     }
 
-    @PostMapping("/bulk")
-    public ResponseEntity<?> registerMultipleUsers(@RequestParam("file") MultipartFile file) {
-        try {
-            List<UserDTO> userList = excelHelper.excelToUsers(file);
 
-            List<String> result = new ArrayList<>();
-            for (UserDTO userDTO : userList) {
-                try {
-                    userService.createUser(userDTO);
-                    result.add("Thành công: " + userDTO.getUsername());
-                } catch (Exception e) {
-                    result.add("Lỗi với " + userDTO.getUsername() + ": " + e.getMessage());
-                }
-            }
-
-            return ResponseEntity.ok(result);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Không thể đọc file Excel: " + e.getMessage());
-        }
-    }
 
     @GetMapping("/students")
     public ResponseEntity<?> getStudents(@RequestParam(defaultValue = "0") int page,
@@ -205,6 +185,53 @@ public class UserController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(userResponses);
+    }
+    @PostMapping("/add-student-exel")
+    public ResponseEntity<?> registerMultipleUsers(@RequestParam("file") MultipartFile file) {
+        try {
+            List<UserDTO> userList = excelHelper.excelToUsers(file);
+
+            List<String> result = new ArrayList<>();
+            for (UserDTO userDTO : userList) {
+                try {
+                    userService.createUser(userDTO);
+                    result.add("Thành công: " + userDTO.getUsername());
+                } catch (Exception e) {
+                    result.add("Lỗi với " + userDTO.getUsername() + ": " + e.getMessage());
+                }
+            }
+
+            return ResponseEntity.ok(result);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Không thể đọc file Excel: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/search/student")
+    public ResponseEntity<?> searchUsersPaginated(@RequestParam String search,
+                                                   @RequestParam int page,
+                                                   @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> userPage = userService.searchUsersPaginated(search, pageable);
+
+        Page<UserResponse> responsePage = userPage.map(user -> UserResponse.builder()
+                .id(user.getId())
+                .fullname(user.getFullname())
+                .phoneNumber(user.getPhoneNumber())
+                .studentId(user.getStudentId())
+                .address(user.getAddress())
+                .isActive(user.isActive())
+                .dateOfBirth(user.getDateOfBirth())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .clazz(user.getClazz() != null ? user.getClazz().getName() : null)
+                .Department(user.getClazz() != null && user.getClazz().getDepartment() != null
+                        ? user.getClazz().getDepartment().getName() : null)
+                .role(user.getRole().getName()) // thêm role nếu cần thiết
+                .build());
+
+        return ResponseEntity.ok(responsePage);
     }
 
 

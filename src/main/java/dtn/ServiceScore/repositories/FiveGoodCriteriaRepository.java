@@ -1,6 +1,7 @@
 package dtn.ServiceScore.repositories;
 
 import dtn.ServiceScore.model.FiveGoodCriteria;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public interface FiveGoodCriteriaRepository extends JpaRepository<FiveGoodCriter
 
     List<FiveGoodCriteria> findByIsActiveTrue();
 
-    List<FiveGoodCriteria> findBySemesterId(Long semesterId);
+    List<FiveGoodCriteria> findBySemesterId(Long semesterId,  Sort sort);
 }

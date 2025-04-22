@@ -147,5 +147,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllByRole_NameNotIn(excludedRoles);
     }
 
+    @Override
+    public Page<User> searchUsersPaginated(String search, Pageable pageable) {
+        return userRepository.searchUsersPaginated(search, pageable);
+    }
+
 
 }

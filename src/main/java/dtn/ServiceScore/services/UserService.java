@@ -24,5 +24,7 @@ public interface UserService {
 
     Page<User> getUsersByRole(String roleName,  Pageable pageable);
 
-    public List<User> getUsersExcludingRoles();
+     List<User> getUsersExcludingRoles();
+    // Tìm kiếm người dùng theo bộ lọc với phân trang, role là 'SV'
+    Page<User> searchUsersPaginated(String search, Pageable pageable);
 }

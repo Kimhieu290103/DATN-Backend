@@ -1,13 +1,19 @@
 package dtn.ServiceScore.controllers;
 
+import dtn.ServiceScore.components.ExcelHelper;
+import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.MessageResponse;
 import dtn.ServiceScore.services.StudentCriteriaService;
 import dtn.ServiceScore.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,6 +23,7 @@ public class StudentCriteriaController {
     private final StudentCriteriaService studentCriteriaService;
     private final UserService userService;
 
+    private final ExcelHelper excelHelper;
 
     @GetMapping("/check/{userId}")
     public ResponseEntity<?> checkUserCriteria(@PathVariable Long userId) {
@@ -37,4 +44,5 @@ public class StudentCriteriaController {
         return ResponseEntity.ok(students);
 
     }
+
 }

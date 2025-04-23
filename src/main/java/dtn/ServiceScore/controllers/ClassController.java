@@ -2,7 +2,9 @@ package dtn.ServiceScore.controllers;
 
 import dtn.ServiceScore.components.ExcelHelper;
 import dtn.ServiceScore.dtos.ClassDTO;
+import dtn.ServiceScore.dtos.ClassMoDTO;
 import dtn.ServiceScore.dtos.ClassSearchRequest;
+import dtn.ServiceScore.responses.MessageResponse;
 import dtn.ServiceScore.services.ClassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +39,7 @@ public class ClassController {
     public ResponseEntity<?> createClass(@RequestBody ClassDTO classDTO) {
         try {
             classService.createClass(classDTO);
-            return ResponseEntity.ok("Thêm lớp thành công!");
+            return ResponseEntity.ok(new MessageResponse("Thêm lớp thành công!"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi: " + e.getMessage());
         }
@@ -54,6 +56,20 @@ public class ClassController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi khi đọc file: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi khi thêm lớp: " + e.getMessage());
+        }
+    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateClass(@PathVariable Long id, @RequestBody ClassMoDTO classDTO) {
+        return ResponseEntity.ok(classService.updateClass(id, classDTO));
+    }
+
+    @PutMapping("/status/{classId}")
+    public ResponseEntity<String> updateClassStatusToFalse(@PathVariable Long classId) {
+        try {
+            classService.updateClassStatusToFalse(classId);
+            return ResponseEntity.ok("Cập nhật trạng thái lớp thành công.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }

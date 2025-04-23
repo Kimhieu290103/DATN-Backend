@@ -33,13 +33,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByRole_NameNotIn(List<String> roleNames);
 
-    @Query("SELECT u FROM User u WHERE " +
-            "u.role.name = 'SV' AND (" +
+    @Query("SELECT u FROM User u " +
+            "JOIN u.clazz c " +
+            "WHERE u.role.name = 'SV' AND (" +
             "u.fullname LIKE %:search% OR " +
             "u.phoneNumber LIKE %:search% OR " +
+            "u.studentId LIKE %:search% OR " +
             "u.email LIKE %:search% OR " +
-            "u.username LIKE %:search%)")
+            "u.username LIKE %:search% OR " +
+            "c.name LIKE %:search%)")
     Page<User> searchUsersPaginated(@Param("search") String search, Pageable pageable);
+
 
 
 }

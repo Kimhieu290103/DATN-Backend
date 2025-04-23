@@ -1,6 +1,7 @@
 package dtn.ServiceScore.services;
 
 import dtn.ServiceScore.dtos.ClassDTO;
+import dtn.ServiceScore.dtos.ClassMoDTO;
 import dtn.ServiceScore.dtos.ClassSearchRequest;
 import dtn.ServiceScore.model.Class;
 
@@ -12,5 +13,9 @@ public interface ClassService {
     List<Class> getClasses(ClassSearchRequest request);
 
     void createClass(ClassDTO classDTO);
+
+     Class updateClass(Long id, ClassMoDTO classDTO);
+
+    Class updateClassStatusToFalse(Long classId);
 
 }

@@ -16,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByEmail(String email);
+
     List<User> findByClazz(Class clazzId);
 
     @Query("SELECT u FROM User u WHERE " +
@@ -43,6 +45,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "u.username LIKE %:search% OR " +
             "c.name LIKE %:search%)")
     Page<User> searchUsersPaginated(@Param("search") String search, Pageable pageable);
+
 
 
 

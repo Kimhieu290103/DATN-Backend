@@ -11,6 +11,9 @@ import dtn.ServiceScore.repositories.CourseRepository;
 import dtn.ServiceScore.repositories.DepartmentRepository;
 import dtn.ServiceScore.services.ClassService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 import java.util.List;
@@ -101,6 +104,15 @@ public class ClassServiceImpl implements ClassService {
             throw new RuntimeException("Không tìm thấy lớp với ID: " + classId);
         }
 
+    }
+
+    @Override
+    public Page<Class> getAllClassPagedSorted(int page, int size) {
+        // Mặc định sắp xếp theo id tăng dần
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("id")));
+
+        // Trả về kết quả phân trang với sắp xếp mặc định
+        return classRepository.findByStatusTrue(pageable);
     }
 
 }

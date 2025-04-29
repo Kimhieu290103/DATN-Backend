@@ -7,6 +7,10 @@ import dtn.ServiceScore.dtos.ClassSearchRequest;
 import dtn.ServiceScore.responses.MessageResponse;
 import dtn.ServiceScore.services.ClassService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,4 +76,18 @@ public class ClassController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<dtn.ServiceScore.model.Class>> getAllClassesPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+
+        // Gọi service và trả về Page<Class>
+        Page<dtn.ServiceScore.model.Class> classPage = classService.getAllClassPagedSorted(page, limit);
+
+        // Trả về ResponseEntity với mã trạng thái HTTP 200 (OK)
+        return ResponseEntity.ok(classPage);
+    }
+
+
 }

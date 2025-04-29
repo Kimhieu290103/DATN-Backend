@@ -39,6 +39,16 @@ public class JwtTokenUtil {
             return null;
         }
     }
+    public String generateResetToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("purpose", "RESET_PASSWORD"); // để phân biệt rõ
+        return Jwts.builder()
+                .claims(claims)
+                .subject(user.getUsername())
+                .expiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 phút
+                .signWith(getSignInKey())
+                .compact();
+    }
 
     private SecretKey getSignInKey() {
         byte[] bytes = Decoders.BASE64.decode(serectKey);

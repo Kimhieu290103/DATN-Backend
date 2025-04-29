@@ -1,11 +1,14 @@
 package dtn.ServiceScore.services;
 
 import dtn.ServiceScore.dtos.ChangePasswordDTO;
+import dtn.ServiceScore.dtos.ResetPasswordDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.LoginRespone;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -27,4 +30,6 @@ public interface UserService {
      List<User> getUsersExcludingRoles();
     // Tìm kiếm người dùng theo bộ lọc với phân trang, role là 'SV'
     Page<User> searchUsersPaginated(String search, Pageable pageable);
+
+
 }

@@ -29,7 +29,8 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
                     requests // Các API có thể truy cập mà không cần đăng nhập
-                            .requestMatchers(POST, "/api/v1/users/register", "/api/v1/users/login").permitAll()
+                            .requestMatchers(POST, "/api/v1/users/register", "/api/v1/users/login","/api/v1/forgotpass/forgot",
+                                    "api/v1/forgotpass/reset").permitAll()
                             .requestMatchers(GET, "/api/v1/five_good/all", "/api/v1/events/all"
                                                     , "/api/v1/events/all/**"
                                                     ,"/api/v1/events/criteria/**","/swagger-ui/**"

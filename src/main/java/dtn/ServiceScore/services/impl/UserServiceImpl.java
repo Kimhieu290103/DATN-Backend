@@ -2,6 +2,7 @@ package dtn.ServiceScore.services.impl;
 
 import dtn.ServiceScore.components.JwtTokenUtil;
 import dtn.ServiceScore.dtos.ChangePasswordDTO;
+import dtn.ServiceScore.dtos.ResetPasswordDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.exceptions.DataNotFoundException;
 import dtn.ServiceScore.model.Class;
@@ -18,6 +19,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -151,6 +153,7 @@ public class UserServiceImpl implements UserService {
     public Page<User> searchUsersPaginated(String search, Pageable pageable) {
         return userRepository.searchUsersPaginated(search, pageable);
     }
+
 
 
 }

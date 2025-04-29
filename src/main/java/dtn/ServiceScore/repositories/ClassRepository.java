@@ -1,6 +1,8 @@
 package dtn.ServiceScore.repositories;
 
 import dtn.ServiceScore.model.Class;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +22,8 @@ public interface ClassRepository extends JpaRepository<Class, Long> {
     // Truy vấn lấy tất cả các lớp có status = true và sắp xếp theo id
     @Query("SELECT c FROM Class c WHERE c.status = true ORDER BY c.id ASC")
     List<Class> findAllByStatusTrue(Sort sort);
+
+    Page<Class> findByStatusTrue(Pageable pageable);  // Dùng Pageable để phân trang và sắp xếp
+
+
 }

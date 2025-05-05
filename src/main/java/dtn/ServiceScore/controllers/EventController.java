@@ -482,4 +482,13 @@ private String storeFile(MultipartFile file) throws IOException {
         }
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Event>> searchEventsByName(@RequestParam String name) {
+        List<Event> events = eventService.searchEventsByName(name);
+        if (events.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Trả về không có dữ liệu nếu không tìm thấy sự kiện
+        }
+        return ResponseEntity.ok(events); // Trả về danh sách sự kiện tìm được
+    }
+
 }

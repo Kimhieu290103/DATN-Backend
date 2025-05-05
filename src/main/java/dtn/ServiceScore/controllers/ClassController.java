@@ -68,10 +68,10 @@ public class ClassController {
     }
 
     @PutMapping("/status/{classId}")
-    public ResponseEntity<String> updateClassStatusToFalse(@PathVariable Long classId) {
+    public ResponseEntity<?> updateClassStatusToFalse(@PathVariable Long classId) {
         try {
             classService.updateClassStatusToFalse(classId);
-            return ResponseEntity.ok("Cập nhật trạng thái lớp thành công.");
+            return ResponseEntity.ok(new MessageResponse("Cập nhật trạng thái lớp thành công"));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }

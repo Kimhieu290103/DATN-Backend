@@ -32,6 +32,11 @@ public class EventScheduler {
 
     private void processCompletedEvent(Event event) {
         try {
+
+            if (!"OPEN".equals(event.getStatus())) {
+                return;
+            }
+
             // Lấy người tổ chức sự kiện
             Long userId = event.getUser().getId();
             var user = userService.getUserById(userId);

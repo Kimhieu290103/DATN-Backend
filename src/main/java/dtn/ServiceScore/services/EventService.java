@@ -34,4 +34,5 @@ public interface EventService {
     // Kiểm tra xem các sự kiện đã kết thúc
     List<Event> getExpiredEvents(LocalDateTime now);
 
+    List<Event> searchEventsByName(String name);
 }

@@ -30,9 +30,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
                              @Param("courseId") Integer courseId,
                              @Param("departmentId") Integer departmentId);
 
-    Page<User> findAllByRole_Name(String roleName, Pageable pageable);
+    Page<User>  findAllByRole_NameAndIsActiveTrue(String roleName, Pageable pageable);
 
-
+    Page<User>  findAllByRole_Name(String roleName, Pageable pageable);
     List<User> findAllByRole_NameNotIn(List<String> roleNames);
 
     @Query("SELECT u FROM User u " +

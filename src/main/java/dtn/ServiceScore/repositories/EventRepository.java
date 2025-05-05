@@ -22,5 +22,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     // Tìm sự kiện theo eventType.id và có phân trang
     Page<Event> findByEventType_Id(Long eventTypeId, Pageable pageable);
 
+    List<Event> findByNameContainingIgnoreCase(String name);
+
+
 
 }

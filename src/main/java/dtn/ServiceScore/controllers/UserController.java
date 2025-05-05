@@ -4,6 +4,7 @@ import dtn.ServiceScore.components.ExcelHelper;
 import dtn.ServiceScore.dtos.ChangePasswordDTO;
 import dtn.ServiceScore.dtos.UserDTO;
 import dtn.ServiceScore.dtos.UserLoginDTO;
+import dtn.ServiceScore.dtos.UserUpdateDTO;
 import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.LoginRespone;
 import dtn.ServiceScore.responses.MessageResponse;
@@ -21,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,14 +76,16 @@ public class UserController {
                 .id(user.getId())
                 .fullname(user.getFullname())
                 .phoneNumber(user.getPhoneNumber())
-                .studentId(user.getStudentId())
+                .studentId(user.getStudentId() != null ? user.getStudentId() : null)
                 .address(user.getAddress())
                 .isActive(user.isActive())
                 .dateOfBirth(user.getDateOfBirth())
                 .email(user.getEmail())
                 .username(user.getUsername())
-                .clazz(user.getClazz().getName())
-                .Department(user.getClazz().getDepartment().getName())
+                .clazz(user.getClazz() != null ? user.getClazz().getName() : null)
+                .Department(user.getClazz() != null && user.getClazz().getDepartment() != null
+                        ? user.getClazz().getDepartment().getName()
+                        : null)
                 .build();
         return userResponse;
 
@@ -109,9 +113,9 @@ public class UserController {
 
     // thay đổi mật khẩu
     @PostMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO request) {
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO request) {
         userService.changePassword(request);
-        return ResponseEntity.ok("Đổi mật khẩu thành công!");
+        return ResponseEntity.ok(new MessageResponse("Đổi mật khẩu thành công!"));
     }
 
 
@@ -234,6 +238,23 @@ public class UserController {
         return ResponseEntity.ok(responsePage);
     }
 
+    @PutMapping("/profile/{id}")
+    public  ResponseEntity<?> updateProfile(@PathVariable Long id,
+                                @RequestBody UserUpdateDTO dto) {
+        System.out.println("Updating profile for user with ID: " + id);
+        userService.updateUserProfileById(id, dto);
+        return ResponseEntity.ok( new MessageResponse("cập nhật thành công"));
+    }
+
+    @PutMapping("/deactivate/{id}")
+    public ResponseEntity<?> deactivateUser(@PathVariable("id") long id) {
+        User updatedUser = userService.deactivateUserById(id);
+        if (updatedUser != null) {
+            return  ResponseEntity.ok( new MessageResponse("cập nhật thành công")); // Trả về người dùng đã được cập nhật
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + id); // Trả về lỗi 404 nếu không tìm thấy người dùng
+        }
+    }
 
 
 }

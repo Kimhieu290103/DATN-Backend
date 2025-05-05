@@ -270,6 +270,11 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findByEndDateBeforeAndStatusNot(now, "COMPLETED");
     }
 
+    @Override
+    public List<Event> searchEventsByName(String name) {
+        return eventRepository.findByNameContainingIgnoreCase(name);
+    }
+
 
     // Hàm chuyển đổi chuỗi sang LocalDateTime
     private LocalDateTime parseLocalDateTime(LocalDateTime dateTime, DateTimeFormatter formatter) {

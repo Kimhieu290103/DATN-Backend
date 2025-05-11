@@ -1,6 +1,7 @@
 package dtn.ServiceScore.repositories;
 
 import dtn.ServiceScore.model.Event;
+import dtn.ServiceScore.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,6 +24,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findByEventType_Id(Long eventTypeId, Pageable pageable);
 
     List<Event> findByNameContainingIgnoreCase(String name);
+
+    List<Event> findByNameContainingIgnoreCaseAndUser(String name, User user);
 
 
 

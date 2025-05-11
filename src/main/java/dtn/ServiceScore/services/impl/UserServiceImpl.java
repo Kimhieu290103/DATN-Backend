@@ -187,7 +187,8 @@ public class UserServiceImpl implements UserService {
 
 
         if (user != null) {
-            user.setActive(false); // Đặt isActive thành false
+            // Đảo ngược trạng thái hiện tại
+            user.setActive(!user.isActive()); // Đặt isActive thành false
             return userRepository.save(user); // Lưu lại thay đổi vào cơ sở dữ liệu
         }
         return null; // Trả về null nếu không tìm thấy người dùng

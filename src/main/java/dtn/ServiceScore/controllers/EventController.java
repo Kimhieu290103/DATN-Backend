@@ -119,7 +119,7 @@ public class EventController {
 //        PageRequest pageRequest = PageRequest.of(page,
 //                limit);
         // Thêm sắp xếp mặc định theo registrationStartDate giảm dần
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<Event> eventPages = eventService.getAllEvents(pageRequest);
         int totalPages = eventPages.getTotalPages();
@@ -169,7 +169,7 @@ public class EventController {
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ) {
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC,  "id"));
         Page<Event> eventPages = eventService.getEventsByEventType(eventTypeId, pageRequest);
         int totalPages = eventPages.getTotalPages();
 
@@ -430,7 +430,7 @@ private String storeFile(MultipartFile file) throws IOException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = user.getId();
 
-        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "registrationStartDate"));
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
         Page<Event> eventPages = eventService.getEventByUser(pageRequest);
         int totalPages = eventPages.getTotalPages();
 
@@ -489,6 +489,11 @@ private String storeFile(MultipartFile file) throws IOException {
             return ResponseEntity.noContent().build(); // Trả về không có dữ liệu nếu không tìm thấy sự kiện
         }
         return ResponseEntity.ok(events); // Trả về danh sách sự kiện tìm được
+    }
+    @GetMapping("/search-myevents")
+    public List<Event> searchEvents(@RequestParam String name) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return eventService.searchEventsByName(name, user);
     }
 
 }

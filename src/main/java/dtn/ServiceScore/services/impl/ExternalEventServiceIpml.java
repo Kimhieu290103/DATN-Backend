@@ -8,14 +8,19 @@ import dtn.ServiceScore.repositories.ExternalEventRepository;
 import dtn.ServiceScore.repositories.SemesterRepository;
 import dtn.ServiceScore.responses.ExternalEventResponse;
 import dtn.ServiceScore.services.ExternalEventService;
+import dtn.ServiceScore.services.SupabaseService;
 import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +28,7 @@ import java.util.stream.Collectors;
 public class ExternalEventServiceIpml implements ExternalEventService {
     private final ExternalEventRepository externalEventRepository;
     private final SemesterRepository semesterRepository;
-
+    private final SupabaseService supabaseService;
     @Override
     public ExternalEventResponse createExternalEvent(ExternalEventDTO dto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -112,6 +117,40 @@ public class ExternalEventServiceIpml implements ExternalEventService {
     public ExternalEvent findById(Long id) {
         Optional<ExternalEvent> event = externalEventRepository.findById(id);
         return event.orElse(null);
+    }
+
+    @Override
+    public ExternalEvent createExternalEventRAR(String name, String description, LocalDate date, Long points, Long semesterId, MultipartFile file)
+            throws IOException {
+        if (file.isEmpty() || !file.getOriginalFilename().endsWith(".rar")) {
+            throw new IllegalArgumentException("File phải là định dạng .rar");
+        }
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+        String url = supabaseService.uploadFile(file.getBytes(), fileName);
+
+        ExternalEvent event = ExternalEvent.builder()
+                .name(name)
+                .description(description)
+                .date(date)
+                .points(points)
+                .proofUrl(url)
+                .status(ExternalEventStatus.PENDING)
+                .semester(semesterRepository.findById(semesterId).orElseThrow())
+                .user(user)
+                .build();
+
+        return externalEventRepository.save(event);
+    }
+
+    @Override
+    public List<ExternalEvent> getApprovedEventsByUserAndOptionalSemester(Long userId, Long semesterId) {
+        return externalEventRepository.findApprovedEventsByUserAndOptionalSemester(
+                userId,
+                ExternalEventStatus.APPROVED,
+                semesterId
+        );
     }
 
 

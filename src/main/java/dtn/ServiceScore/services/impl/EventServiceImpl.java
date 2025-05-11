@@ -275,6 +275,11 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findByNameContainingIgnoreCase(name);
     }
 
+    @Override
+    public List<Event> searchEventsByName(String name, User currentUser) {
+        return eventRepository.findByNameContainingIgnoreCaseAndUser(name, currentUser);
+    }
+
 
     // Hàm chuyển đổi chuỗi sang LocalDateTime
     private LocalDateTime parseLocalDateTime(LocalDateTime dateTime, DateTimeFormatter formatter) {

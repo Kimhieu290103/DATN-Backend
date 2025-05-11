@@ -3,6 +3,7 @@ package dtn.ServiceScore.services;
 import dtn.ServiceScore.dtos.EventDTO;
 import dtn.ServiceScore.model.Event;
 import dtn.ServiceScore.model.EventImage;
+import dtn.ServiceScore.model.User;
 import dtn.ServiceScore.responses.EventCriteriaResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,4 +36,6 @@ public interface EventService {
     List<Event> getExpiredEvents(LocalDateTime now);
 
     List<Event> searchEventsByName(String name);
+
+    List<Event> searchEventsByName(String name, User currentUser);
 }

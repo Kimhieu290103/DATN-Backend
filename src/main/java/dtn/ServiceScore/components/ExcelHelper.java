@@ -87,12 +87,13 @@ public class ExcelHelper {
                     user.setAddress(getCellValueAsString(row.getCell(3)));
                     user.setDateOfBirth(LocalDate.parse(getCellValueAsString(row.getCell(4))));
                     user.setEmail(getCellValueAsString(row.getCell(5)));
-                    user.setUsername(getCellValueAsString(row.getCell(6)));
-                    user.setPassword(getCellValueAsString(row.getCell(7)));
-                    user.setRetypePassword(getCellValueAsString(row.getCell(8)));
-                    user.setClassName(getCellValueAsString(row.getCell(9)));
-                    user.setRoleName(getCellValueAsString(row.getCell(10)));
-
+//                    user.setUsername(getCellValueAsString(row.getCell(6)));
+                    user.setPassword(getCellValueAsString(row.getCell(6)));
+                    user.setRetypePassword(getCellValueAsString(row.getCell(6)));
+                    user.setClassName(getCellValueAsString(row.getCell(7)));
+ //                   user.setRoleName(getCellValueAsString(row.getCell(8)));
+                    user.setRoleName("SV");
+                    user.setUsername("");
                     users.add(user);
                 } catch (Exception e) {
                     throw new IOException("Lỗi tại dòng " + (i + 1) + ": " + e.getMessage(), e);

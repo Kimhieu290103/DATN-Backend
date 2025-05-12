@@ -57,6 +57,10 @@ public class ClassServiceImpl implements ClassService {
 
         Course course = courseRepository.findByName(classDTO.getCourse())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khóa học"));
+        Optional<Class> currentClass = classRepository.findByName(classDTO.getName());
+        if (currentClass.isPresent()) {
+            throw new RuntimeException("Tên lớp đã tồn tại");
+        }
 
         Class newClass = Class.builder()
                 .name(classDTO.getName())

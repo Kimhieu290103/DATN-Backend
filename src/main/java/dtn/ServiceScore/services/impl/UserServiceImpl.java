@@ -45,8 +45,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(UserDTO userDTO) throws DataIntegrityViolationException, DataNotFoundException {
         String username = userDTO.getUsername();
-        if (userRepository.existsByUsername(username)) {
-            throw new DataIntegrityViolationException("username existed");
+        String studentId = userDTO.getStudentId();
+//        if (userRepository.existsByUsername(username)) {
+//            throw new DataIntegrityViolationException("username existed");
+//        }
+
+        if ((username == null || username.isEmpty()) && (studentId == null || studentId.isEmpty())) {
+            throw new DataIntegrityViolationException("Bạn phải nhập ít nhất một trong hai: username hoặc studentId");
+        }
+        // Nếu username không rỗng, kiểm tra sự tồn tại của username
+        if (username != null && !username.isEmpty() && userRepository.existsByUsername(username)) {
+            throw new DataIntegrityViolationException("Username đã tồn tại");
+        }
+        // Kiểm tra nếu studentId không rỗng và tồn tại trong cơ sở dữ liệu
+        if (studentId != null && !studentId.isEmpty() && userRepository.existsByStudentId(studentId)) {
+            throw new DataIntegrityViolationException("Student ID đã tồn tại");
         }
         User newUser = User.builder()
                 .fullname(userDTO.getFullname())
@@ -73,8 +86,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginRespone login(String username, String password) throws RuntimeException {
-        User user = userRepository.findByUsername(username)
+
+        User user = userRepository.findByUsernameOrStudentId(username, username)
                 .orElseThrow(() -> new DataNotFoundException("Sai tài khoản hoặc mật khẩu"));
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new DataNotFoundException("Sai tài khoản hoặc mật khẩu"));
 
         if (!user.isActive()) { // Kiểm tra nếu isActive là false (tài khoản bị khóa)
             throw new BadCredentialsException("Tài khoản của bạn đã bị khóa");

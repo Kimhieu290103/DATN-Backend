@@ -45,7 +45,7 @@ public class ClassController {
             classService.createClass(classDTO);
             return ResponseEntity.ok(new MessageResponse("Thêm lớp thành công!"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Lỗi: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(e.getMessage()));
         }
     }
     @PostMapping("/import")

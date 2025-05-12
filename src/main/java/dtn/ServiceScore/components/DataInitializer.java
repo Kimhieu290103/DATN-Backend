@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DataInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
-    private final LcdRepository lcdRepository;
+
     private final SemesterRepository semesterRepository;
     private final CourseRepository courseRepository;
     private final DepartmentRepository departmentRepository;
@@ -23,7 +23,6 @@ public class DataInitializer implements CommandLineRunner {
     private final ClassRepository classRepository;
 
     public DataInitializer(RoleRepository roleRepository
-            , LcdRepository lcdRepository
             , SemesterRepository semesterRepository
             , CourseRepository courseRepository
             , DepartmentRepository departmentRepository
@@ -32,7 +31,6 @@ public class DataInitializer implements CommandLineRunner {
             , EventTypeRepository eventTypeRepository
             , ClassRepository classRepository) {
         this.roleRepository = roleRepository;
-        this.lcdRepository = lcdRepository;
         this.semesterRepository = semesterRepository;
         this.courseRepository = courseRepository;
         this.departmentRepository = departmentRepository;

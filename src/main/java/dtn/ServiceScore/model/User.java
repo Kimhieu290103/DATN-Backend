@@ -29,6 +29,7 @@ public class User implements UserDetails {
     @Column(name = "phone_number", nullable = false, length = 10)
     private String phoneNumber;
 
+    @Getter
     @Column(name = "student_id", nullable = false, length = 20)
     private String studentId;
 
@@ -54,7 +55,7 @@ public class User implements UserDetails {
 
 
     // cai nay dung de dang nhap
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false)
     private String username;
 
     // noi role
@@ -72,8 +73,11 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        // cái cũ
+      //  return username;
+        return (username != null && !username.isEmpty()) ? username : studentId;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

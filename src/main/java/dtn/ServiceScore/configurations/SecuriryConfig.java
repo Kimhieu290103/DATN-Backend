@@ -22,7 +22,7 @@ public class SecuriryConfig {
     @Bean
     public UserDetailsService userDetailsService() {
 
-        return username -> userRepository.findByUsername(username)
+        return username -> userRepository.findByUsernameOrStudentId(username,username)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("khong tim thay user co username la " + username));
 

@@ -26,11 +26,22 @@ public class JwtTokenUtil {
 
     public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
+        // thêm sau, nếu xóa thì xóa cái này
+        String subject;
+        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+            claims.put("username", user.getUsername());
+            subject = user.getUsername();
+        } else {
+            claims.put("studentId", user.getStudentId());
+            subject = user.getStudentId();
+        }
+        // ô viền dưới để xóa
         claims.put("userName", user.getUsername());
         try {
             return Jwts.builder()
                     .claims(claims)
-                    .subject(user.getUsername())
+//                    .subject(user.getUsername()) // cái này là dùng username
+                    .subject(subject)
                     .expiration(new Date(System.currentTimeMillis() + expiration * 1000L))
                     .signWith(getSignInKey()) // Không cần SignatureAlgorithm
                     .compact();
@@ -42,9 +53,15 @@ public class JwtTokenUtil {
     public String generateResetToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("purpose", "RESET_PASSWORD"); // để phân biệt rõ
+        // dùng thêm srudent id
+        String subject = (user.getUsername() != null && !user.getUsername().isEmpty())
+                ? user.getUsername()
+                : user.getStudentId();
+        // mốc dưới để xóa phía trên
         return Jwts.builder()
                 .claims(claims)
-                .subject(user.getUsername())
+           //     .subject(user.getUsername()) đây là dùng username
+                .subject(subject)
                 .expiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 phút
                 .signWith(getSignInKey())
                 .compact();
@@ -77,8 +94,13 @@ public class JwtTokenUtil {
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        // cái cũ dùng username
+//        String userName = extractUserName(token);
+//        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+
+        // cái mới
+        String subject = extractUserName(token);
+        return subject.equals(userDetails.getUsername()) && !isTokenExpired(token);
 
     }
 

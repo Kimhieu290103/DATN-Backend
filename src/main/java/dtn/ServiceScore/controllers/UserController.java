@@ -53,7 +53,7 @@ public class UserController {
             userService.createUser(userDTO);
             return ResponseEntity.ok(new MessageResponse("dang ki thanh cong"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(e.getMessage()));
         }
     }
 
@@ -199,9 +199,9 @@ public class UserController {
             for (UserDTO userDTO : userList) {
                 try {
                     userService.createUser(userDTO);
-                    result.add("Thành công: " + userDTO.getUsername());
+                    result.add("Thành công");
                 } catch (Exception e) {
-                    result.add("Lỗi với " + userDTO.getUsername() + ": " + e.getMessage());
+                    result.add("Lỗi với " + userDTO.getStudentId() + ": " + e.getMessage());
                 }
             }
 

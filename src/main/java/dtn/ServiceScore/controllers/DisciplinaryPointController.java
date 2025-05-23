@@ -11,6 +11,11 @@ import dtn.ServiceScore.services.EventService;
 import dtn.ServiceScore.services.ExternalEventService;
 import dtn.ServiceScore.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -162,14 +167,31 @@ public class DisciplinaryPointController {
 
     // lấy danh sách và số điểm sinh viên theo filter
 
+//    @GetMapping
+//    public ResponseEntity<List<StudentPointResponse>> getStudents(
+//            @RequestParam(required = false) Long classId,
+//            @RequestParam(required = false) Integer courseId,
+//            @RequestParam(required = false) Integer departmentId,
+//            @RequestParam(required = false) Long semesterId) {
+//
+//        List<StudentPointResponse> students = disciplinaryPointService.getStudentsWithTotalPoints(classId, courseId, departmentId, semesterId);
+//        return ResponseEntity.ok(students);
+//    }
+
     @GetMapping
-    public ResponseEntity<List<StudentPointResponse>> getStudents(
+    public ResponseEntity<Page<StudentPointResponse>> getStudents(
             @RequestParam(required = false) Long classId,
             @RequestParam(required = false) Integer courseId,
             @RequestParam(required = false) Integer departmentId,
-            @RequestParam(required = false) Long semesterId) {
+            @RequestParam(required = false) Long semesterId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-        List<StudentPointResponse> students = disciplinaryPointService.getStudentsWithTotalPoints(classId, courseId, departmentId, semesterId);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+
+        Page<StudentPointResponse> students = disciplinaryPointService.getStudentsWithTotalPoints(
+                classId, courseId, departmentId, semesterId, pageable);
+
         return ResponseEntity.ok(students);
     }
 }

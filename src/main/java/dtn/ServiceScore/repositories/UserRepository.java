@@ -32,6 +32,19 @@ public interface UserRepository extends JpaRepository<User, Long> {
                              @Param("courseId") Integer courseId,
                              @Param("departmentId") Integer departmentId);
 
+
+    // lấy điểm sinh viên quản lí điểm ở trang cộng tác sinh viên
+    @Query("SELECT u FROM User u WHERE " +
+            "(:classId IS NULL OR u.clazz.id = :classId) AND " +
+            "(:courseId IS NULL OR u.clazz.course.id = :courseId) AND " +
+            "(:departmentId IS NULL OR u.clazz.department.id = :departmentId) AND " +
+            "u.role.name = 'SV'")
+    Page<User> findByFilters(@Param("classId") Long classId,
+                             @Param("courseId") Integer courseId,
+                             @Param("departmentId") Integer departmentId,
+                             Pageable pageable);
+
+
     Page<User>  findAllByRole_NameAndIsActiveTrue(String roleName, Pageable pageable);
 
     Page<User>  findAllByRole_Name(String roleName, Pageable pageable);

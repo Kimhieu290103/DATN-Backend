@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -123,7 +124,9 @@ public class UserController {
     @GetMapping("/students")
     public ResponseEntity<?> getStudents(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "10") int limit) {
-        Pageable pageable = PageRequest.of(page, limit);
+       // Pageable pageable = PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
+
         Page<User> studentPage = userService.getUsersByRole("SV", pageable);
 
         Page<UserResponse> responsePage = studentPage.map(user -> UserResponse.builder()
@@ -146,7 +149,9 @@ public class UserController {
     @GetMapping("/lcdlist")
     public ResponseEntity<?> getLcds(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "10") int limit) {
-        Pageable pageable = PageRequest.of(page, limit);
+//        Pageable pageable = PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "id"));
+
         Page<User> studentPage = userService.getUsersByRole("LCD", pageable);
 
         Page<UserResponse> responsePage = studentPage.map(user -> UserResponse.builder()

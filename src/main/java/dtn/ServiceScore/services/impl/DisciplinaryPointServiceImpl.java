@@ -8,6 +8,8 @@ import dtn.ServiceScore.services.DisciplinaryPointService;
 import dtn.ServiceScore.utils.Enums.ExternalEventStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +46,7 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
                     DisciplinaryPoint newPoint = DisciplinaryPoint.builder()
                             .user(user)
                             .semester(event.getSemester())
-                            .points(event.getScore()) // Set điểm event
+                            .points(0L) // Set điểm event
                             .build();
                     return disciplinaryPointRepository.save(newPoint);
                 });
@@ -183,14 +185,53 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
         );
     }
 
+//    @Override
+//    public List<StudentPointResponse> getStudentsWithTotalPoints(
+//            Long classId, Integer courseId, Integer departmentId, Long semesterId) {
+//
+//        // Lấy danh sách sinh viên theo tiêu chí
+//        List<User> students = userRepository.findByFilters(classId, courseId, departmentId);
+//
+//        return students.stream().map(student -> {
+//            long totalPoints;
+//
+//            if (semesterId != null) {
+//                // Nếu có học kỳ, lấy điểm theo học kỳ
+//                totalPoints = Optional.ofNullable(
+//                        disciplinaryPointRepository.getTotalPointsByUserAndSemester(student.getId(), semesterId)
+//                ).orElse(0L);
+//            } else {
+//                // Nếu không có học kỳ, lấy điểm từ bảng DisciplinaryPoint
+//                totalPoints = disciplinaryPointRepository.findByUser(student)
+//                        .stream()
+//                        .mapToLong(DisciplinaryPoint::getPoints)
+//                        .sum();
+//            }
+//
+//            // Trả về kết quả
+//            return StudentPointResponse.builder()
+//                    .id(student.getId())
+//                    .studentId(student.getStudentId())
+//                    .studentName(student.getFullname())
+//                    .className(student.getClazz().getName())
+//                    .email(student.getEmail())
+//                    .phoneNumber(student.getPhoneNumber())
+//                    .dateOfBirth(student.getDateOfBirth())
+//                    .Department(student.getClazz().getDepartment().getName())
+//                    .address(student.getAddress())
+//                    .totalPoints(totalPoints)
+//                    .build();
+//        }).toList();
+//    }
     @Override
-    public List<StudentPointResponse> getStudentsWithTotalPoints(
-            Long classId, Integer courseId, Integer departmentId, Long semesterId) {
+    public Page<StudentPointResponse> getStudentsWithTotalPoints(
+            Long classId, Integer courseId, Integer departmentId, Long semesterId, Pageable pageable) {
 
-        // Lấy danh sách sinh viên theo tiêu chí
-        List<User> students = userRepository.findByFilters(classId, courseId, departmentId);
+        // Lấy danh sách sinh viên theo tiêu chí và phân trang
+        Page<User> studentsPage = userRepository.findByFilters(classId, courseId, departmentId, pageable);
 
-        return students.stream().map(student -> {
+        // Chuyển đổi từng User thành StudentPointResponse
+        Page<StudentPointResponse> responsePage = studentsPage.map(student -> {
             long totalPoints;
 
             if (semesterId != null) {
@@ -199,14 +240,13 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
                         disciplinaryPointRepository.getTotalPointsByUserAndSemester(student.getId(), semesterId)
                 ).orElse(0L);
             } else {
-                // Nếu không có học kỳ, lấy điểm từ bảng DisciplinaryPoint
+                // Nếu không có học kỳ, lấy tất cả điểm của sinh viên
                 totalPoints = disciplinaryPointRepository.findByUser(student)
                         .stream()
                         .mapToLong(DisciplinaryPoint::getPoints)
                         .sum();
             }
 
-            // Trả về kết quả
             return StudentPointResponse.builder()
                     .id(student.getId())
                     .studentId(student.getStudentId())
@@ -219,8 +259,11 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
                     .address(student.getAddress())
                     .totalPoints(totalPoints)
                     .build();
-        }).toList();
+        });
+
+        return responsePage;
     }
+
 
 
 }

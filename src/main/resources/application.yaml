@@ -10,8 +10,9 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: your-email@gmail.com
-    password: your-app-password
+#    username: your-email@gmail.com
+    username: trankimhieu1008@gmail.com
+    password: lldq uzsm agwe vqwi
     properties:
       mail:
         smtp:
@@ -21,13 +22,13 @@ spring:
   datasource:
     #TODO: Private this ...
     ##
-    url: jdbc:postgresql://dpg-d0m3vqh5pdvs738sropg-a.oregon-postgres.render.com/servicescore_db_6fop
-    username: root #user postgres
-    password: iccsKOuvWh0319ybotBoToV97Nqvc1M9 #Mat khau
-#
-#    url: jdbc:postgresql://localhost:5432/servicescore_db #ten database
-#    username: postgres
-#    password: trankimhieu123 #Mat khau
+#    url: jdbc:postgresql://dpg-d0m3vqh5pdvs738sropg-a.oregon-postgres.render.com/servicescore_db_6fop
+#    username: root #user postgres
+#    password: iccsKOuvWh0319ybotBoToV97Nqvc1M9 #Mat khau
+##
+    url: jdbc:postgresql://localhost:5432/servicescore_db #ten database
+    username: postgres
+    password: trankimhieu123 #Mat khau
 
   jpa:
     properties:

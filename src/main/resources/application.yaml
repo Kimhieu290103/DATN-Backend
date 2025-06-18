@@ -22,7 +22,7 @@ spring:
   datasource:
     #TODO: Private this ...
     ##
-    url: jdbc:postgresql://dpg-d195t0vdiees73ai0lu0-a.oregon-postgres.render.com/servicescore_db_d3yu
+    url: jdbc:postgresql://dpg-d195t0vdiees73ai0lu0-a.oregon-postgres.render.com/servicescore_db
     username: root #user postgres
     password: gwlYGTRkLD8efzDB5IL5yKAAIgzxKrzq #Mat khau
 ##

@@ -194,4 +194,20 @@ public class DisciplinaryPointController {
 
         return ResponseEntity.ok(students);
     }
+
+    // hủy điểm danh
+    @DeleteMapping("/attendance/{userId}/{eventId}")
+    public ResponseEntity<?> cancelAttendance(@PathVariable Long userId, @PathVariable Long eventId) {
+        try {
+            User user = userService.getUserById(userId);
+            Event event = eventService.getEventById(eventId);
+            disciplinaryPointService.cancelAttendance(user, event);
+            return ResponseEntity.ok(new MessageResponse("Đã hủy điểm danh thành công"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(new MessageResponse("Lỗi hệ thống: " + e.getMessage()));
+        }
+    }
+
 }

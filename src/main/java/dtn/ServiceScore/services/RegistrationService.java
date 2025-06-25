@@ -45,4 +45,7 @@ public interface RegistrationService {
     ResponseEntity<Resource> exportEventRegistrationsToExcel(Long eventID);
 
     ResponseEntity<Resource> exportAttendedEventsToExcel(Long userId, Long semesterId);
+
+    // quản lí xóa sinh viên đangn kí sự kiện
+    public void cancelRegistrationByAdmin(Long eventId, Long userId);
 }

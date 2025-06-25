@@ -112,5 +112,19 @@ public class RegistrationController {
             @RequestParam(required = false) Long semesterId) {
         return registrationService.exportAttendedEventsToExcel(userId, semesterId);
     }
+    // quán lí hủy sinh viên trong danh sách đăng kí sự kiện
+    @DeleteMapping("/{eventId}/student/{studentId}")
+    public ResponseEntity<?> removeStudentFromEvent(
+            @PathVariable("eventId") Long eventId,
+            @PathVariable("studentId") Long studentId) {
+        try {
+            registrationService.cancelRegistrationByAdmin(eventId, studentId);
+            return ResponseEntity.ok("Đã xóa sinh viên khỏi sự kiện thành công!");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse(e.getMessage()));
+        }
+    }
+
 
 }

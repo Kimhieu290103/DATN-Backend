@@ -392,4 +392,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
+    @Override
+    public void cancelRegistrationByAdmin(Long eventId, Long userId) {
+        Registration registration = registrationRepository
+                .findByUser_IdAndEvent_Id(userId, eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy đăng ký của sinh viên cho sự kiện này"));
+
+        registrationRepository.delete(registration);
+
+        Event existingEvent = eventRepository.findById(eventId)
+                .orElseThrow(() -> new DataNotFoundException("Không tìm thấy sự kiện"));
+
+        existingEvent.setCurrentRegistrations(existingEvent.getCurrentRegistrations() - 1);
+        eventRepository.save(existingEvent);
+    }
+
 }

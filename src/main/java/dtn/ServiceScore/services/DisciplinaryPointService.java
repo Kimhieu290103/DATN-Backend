@@ -34,8 +34,8 @@ public interface DisciplinaryPointService {
     // danh sách điêmr sinh viên
 //    List<StudentPointResponse> getStudentsWithTotalPoints(
 //            Long classId, Integer courseId, Integer departmentId, Long semesterId);
-
-
+// hủy điểm danh
+    public void cancelAttendance(User user, Event event);
     public Page<StudentPointResponse> getStudentsWithTotalPoints(
             Long classId, Integer courseId, Integer departmentId, Long semesterId, Pageable pageable);
 }

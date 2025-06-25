@@ -1,5 +1,7 @@
 package dtn.ServiceScore.repositories;
 
+import dtn.ServiceScore.model.FiveGoodCriteria;
+import dtn.ServiceScore.model.Semester;
 import dtn.ServiceScore.model.StudentCriteria;
 import dtn.ServiceScore.model.User;
 import jakarta.transaction.Transactional;
@@ -29,6 +31,9 @@ public interface StudentCriteriaRepository extends JpaRepository<StudentCriteria
     @Modifying
     @Query("DELETE FROM StudentCriteria sc WHERE sc.criteria.id = :criteriaId")
     void deleteByCriteriaId(@Param("criteriaId") Long criteriaId);
+
+    void deleteByStudentAndCriteriaAndSemester(User student, FiveGoodCriteria criteria, Semester semester);
+
 
 
 }

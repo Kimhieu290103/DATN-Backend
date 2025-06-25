@@ -264,6 +264,36 @@ public class DisciplinaryPointServiceImpl implements DisciplinaryPointService {
         return responsePage;
     }
 
+    public void cancelAttendance(User user, Event event) {
+        Registration registration = registrationRepository.findByUserAndEvent(user, event);
+
+        if (registration == null) {
+            throw new IllegalStateException("Người dùng chưa đăng ký sự kiện này.");
+        }
+
+        if (!registration.isAttendances()) {
+            throw new IllegalStateException("Sinh viên chưa được điểm danh.");
+        }
+
+        // Trừ điểm nếu đã có DisciplinaryPoint
+        Optional<DisciplinaryPoint> optionalPoint = disciplinaryPointRepository.findByUserAndSemester(user, event.getSemester());
+        if (optionalPoint.isPresent()) {
+            DisciplinaryPoint disciplinaryPoint = optionalPoint.get();
+            long newPoints = disciplinaryPoint.getPoints() - event.getScore();
+            disciplinaryPoint.setPoints(Math.max(0, newPoints)); // Không cho điểm âm
+            disciplinaryPointRepository.save(disciplinaryPoint);
+        }
+
+        // Xóa tiêu chí đã gắn
+        List<EventCriteria> eventCriteriaList = eventCriteriaRepository.findByEventId(event.getId());
+        for (EventCriteria eventCriteria : eventCriteriaList) {
+            studentCriteriaRepository.deleteByStudentAndCriteriaAndSemester(user, eventCriteria.getCriteria(), event.getSemester());
+        }
+
+        // Đặt lại trạng thái chưa điểm danh
+        registration.setAttendances(false);
+        registrationRepository.save(registration);
+    }
 
 
 }

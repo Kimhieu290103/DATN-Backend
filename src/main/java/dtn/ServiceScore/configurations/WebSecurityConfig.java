@@ -54,7 +54,7 @@ public class WebSecurityConfig {
 //                            .requestMatchers(POST, "/api/v1/five_good_lcd").hasAnyRole("BTV")
 //                            .requestMatchers(PUT, "/api/v1/five_good_lcd/delete/**").hasAnyRole("BTV")
                             .requestMatchers(POST, "/api/v1/registrations/**").hasAnyRole("SV")
-                            .requestMatchers(DELETE, "/api/v1/registrations/**").hasAnyRole("SV")
+                            .requestMatchers(DELETE, "/api/v1/registrations/**").hasAnyRole("SV","HSV","LCD","BTV","CTSV")
                             .requestMatchers(GET, "/api/v1/registrations/event/**"
                             ,"/api/v1/registrations/export/**").hasAnyRole("HSV","LCD","BTV","CTSV")
 
